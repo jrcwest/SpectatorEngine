@@ -45,7 +45,7 @@ public class TouchDraw : MonoBehaviour
 
     IEnumerator DrawLine()
     {
-        GameObject newGameObject = Instantiate(Resources.Load("Line") as GameObject, new Vector3(0, 0, 0), Quaternion.identity);
+        GameObject newGameObject = Instantiate(Resources.Load("Line1") as GameObject, new Vector3(0, 0, 0), Quaternion.identity);
         LineRenderer line = newGameObject.GetComponent<LineRenderer>();
         line.positionCount = 0;
 

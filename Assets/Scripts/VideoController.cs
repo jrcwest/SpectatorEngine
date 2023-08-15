@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TMPro;
+
 public class VideoController : MonoBehaviour
 {
     private float speed = 2f;
@@ -10,8 +12,7 @@ public class VideoController : MonoBehaviour
 
     Camera mainCamera;
 
-    private IEnumerator rewindCoroutine;
-    private IEnumerator fastforwardCoroutine;
+    [SerializeField] TMP_Text videoStateLabel;
 
     private int frames = 0;
 
@@ -22,6 +23,8 @@ public class VideoController : MonoBehaviour
         mainCamera = Camera.main;
         //ResizeSpriteToScreen();
         videoPlayer = videoSurface.GetComponentInParent<UnityEngine.Video.VideoPlayer>();
+
+        videoStateLabel.text = "";
     }
 
     // Update is called once per frame
@@ -34,10 +37,12 @@ public class VideoController : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftArrow))
             {
                 Rewind();
+                videoStateLabel.text = "<< Rewind";
             }
             if (Input.GetKey(KeyCode.RightArrow))
             {
                 FastForward();
+                videoStateLabel.text = ">> Fast Forward";
             }
         }            
         if (Input.GetKeyDown(KeyCode.Space))
@@ -46,11 +51,28 @@ public class VideoController : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            videoPlayer.playbackSpeed = 0.5f;
+            if (videoPlayer.isPaused)
+            {
+                videoPlayer.Play();
+            }
+                videoPlayer.playbackSpeed = 0.5f;
+            videoStateLabel.text = "x0.5 Speed";
+
         }
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             videoPlayer.playbackSpeed = 1;
+        }
+        if (!Input.anyKey)
+        {
+            if (videoPlayer.isPaused)
+            {
+                videoStateLabel.text = "Paused";
+            }
+            else
+            {
+                videoStateLabel.text = "";
+            }            
         }
     }    
 
