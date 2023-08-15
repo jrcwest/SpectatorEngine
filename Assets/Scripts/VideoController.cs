@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class VideoController : MonoBehaviour
 {
-    private float speed = 0.5f;
+    private float speed = 2f;
     public GameObject videoSurface;
     UnityEngine.Video.VideoPlayer videoPlayer;
 
     Camera mainCamera;
-    
+
+    private IEnumerator rewindCoroutine;
+    private IEnumerator fastforwardCoroutine;
+
+    private int frames = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,27 +27,59 @@ public class VideoController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        frames++;
+        // Slow down the tracking to every 10 frames?
+        if (frames % 10 == 0)
         {
-            Rewind();
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            FastForward();
-        }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                Rewind();
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                FastForward();
+            }
+        }            
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Pause();
+        }
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            videoPlayer.playbackSpeed = 0.5f;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            videoPlayer.playbackSpeed = 1;
         }
     }    
 
     public void Rewind()
     {
-        videoPlayer.time -= speed;
+        if (!videoPlayer.isPaused)
+        {
+            Pause();
+            videoPlayer.time -= speed;
+        }
+        else
+        {
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                videoPlayer.time -= speed;
+            }
+        }        
     }
     public void FastForward()
     {
-        videoPlayer.time += speed;
+        if (!videoPlayer.isPaused)
+        {
+            Pause();
+            videoPlayer.time += speed;
+        }
+        else
+        {
+            videoPlayer.time += speed;
+        }        
     }
     public void Pause()
     {
