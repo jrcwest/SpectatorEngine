@@ -6,6 +6,8 @@ public class TouchDraw : MonoBehaviour
 {
     Coroutine drawing;
 
+    [SerializeField] private Camera cam;
+
     // Update is called once per frame
     void Update()
     {
@@ -24,6 +26,15 @@ public class TouchDraw : MonoBehaviour
             foreach (GameObject obj in allObjects)
             {
                 Destroy(obj);
+            }
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") != 0)
+        {
+            GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Line 1");
+            foreach (GameObject obj in allObjects)
+            {
+                LineRenderer line = obj.GetComponent<LineRenderer>();
+                line.SetWidth(cam.orthographicSize / 50, cam.orthographicSize / 50);
             }
         }
         
@@ -55,6 +66,8 @@ public class TouchDraw : MonoBehaviour
             position.z = 0;
             line.positionCount++;
             line.SetPosition(line.positionCount - 1, position);
+            line.SetWidth(cam.orthographicSize / 50, cam.orthographicSize / 50);
+            Debug.Log(cam.orthographicSize);
             // This apparently allows the coroutine to only run once per frame, waiting for the next frame to run again?
             yield return null;
         }
